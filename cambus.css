@@ -1,0 +1,41 @@
+/* 全てのセルに罫線をつける */
+table,
+th,
+td {
+    border: 1px solid black;
+}
+
+/* 基本横方向は全て消す */
+table {
+    border-collapse: collapse;
+}
+
+tr>th,
+tr>td {
+    border-top: none;
+    border-bottom: none;
+}
+
+/* thを囲うための罫線は残す */
+th {
+    border: 1px solid black !important;
+}
+
+td,
+th {
+    padding: 3px;
+    width: 30px;
+    height: 25px;
+}
+
+th {
+    background: #f0e6cc;
+}
+
+.even {
+    background: #fbf8f0;
+}
+
+.odd {
+    background: #fefcf9;
+}
