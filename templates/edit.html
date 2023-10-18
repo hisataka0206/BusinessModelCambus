@@ -11,31 +11,31 @@
 
     <form action="/save" method="POST">
         <label for="key_activity">Key Activity:</label><br>
-        <textarea id="key_activity" name="key_activity" rows="4" cols="50"></textarea><br><br>
+        <textarea id="key_activity" name="key_activity" rows="4" cols="50">{{ canvas_data.key_activity | replace("\n", "<br>") | safe  }}</textarea><br><br>
 
         <label for="customer_relationship">Customer Relationship:</label><br>
-        <textarea id="customer_relationship" name="customer_relationship" rows="4" cols="50"></textarea><br><br>
+        <textarea id="customer_relationship" name="customer_relationship" rows="4" cols="50">{{ canvas_data.customer_relationship | replace("\n", "<br>") | safe  }}</textarea><br><br>
 
         <label for="key_partners">Key Partners:</label><br>
-        <textarea id="key_partners" name="key_partners" rows="4" cols="50"></textarea><br><br>
+        <textarea id="key_partners" name="key_partners" rows="4" cols="50">{{ canvas_data.key_partners | replace("\n", "<br>") | safe  }}</textarea><br><br>
 
         <label for="value_proposition">Value Proposition:</label><br>
-        <textarea id="value_proposition" name="value_proposition" rows="4" cols="50"></textarea><br><br>
+        <textarea id="value_proposition" name="value_proposition" rows="4" cols="50">{{ canvas_data.value_proposition | replace("\n", "<br>") | safe  }}</textarea><br><br>
 
         <label for="customer_segment">Customer Segment:</label><br>
-        <textarea id="customer_segment" name="customer_segment" rows="4" cols="50"></textarea><br><br>
+        <textarea id="customer_segment" name="customer_segment" rows="4" cols="50">{{ canvas_data.customer_segment | replace("\n", "<br>") | safe  }}</textarea><br><br>
 
         <label for="key_resources">Key Resources:</label><br>
-        <textarea id="key_resources" name="key_resources" rows="4" cols="50"></textarea><br><br>
+        <textarea id="key_resources" name="key_resources" rows="4" cols="50">{{ canvas_data.key_resources | replace("\n", "<br>") | safe  }}</textarea><br><br>
 
         <label for="channel">Channel:</label><br>
-        <textarea id="channel" name="channel" rows="4" cols="50"></textarea><br><br>
+        <textarea id="channel" name="channel" rows="4" cols="50">{{ canvas_data.channel | replace("\n", "<br>") | safe  }}</textarea><br><br>
 
         <label for="cost_structure">Cost Structure:</label><br>
-        <textarea id="cost_structure" name="cost_structure" rows="4" cols="50"></textarea><br><br>
+        <textarea id="cost_structure" name="cost_structure" rows="4" cols="50">{{ canvas_data.cost_structure | replace("\n", "<br>") | safe  }}</textarea><br><br>
 
         <label for="revenue_streams">Revenue Streams:</label><br>
-        <textarea id="revenue_streams" name="revenue_streams" rows="4" cols="50"></textarea><br><br>
+        <textarea id="revenue_streams" name="revenue_streams" rows="4" cols="50">{{ canvas_data.revenue_streams | replace("\n", "<br>") | safe  }}</textarea><br><br>
 
         <input type="submit" value="Save">
     </form>

@@ -23,7 +23,6 @@ def index():
     # data を canvas_data という辞書に変換
     canvas_data = {item[0]: item[1] for item in data}
     conn.close()
-    print(canvas_data)
     # return render_template('index.html', data=data)
     return render_template('cambus.html', canvas_data=canvas_data)
 
@@ -48,8 +47,9 @@ def edit():
             JOIN canvas_categories ON canvas_elements.category_id = canvas_categories.id
         ''')
         data = c.fetchall()
+        canvas_data = {item[0]: item[1] for item in data}
         conn.close()
-        return render_template('edit.html', data=data)
+        return render_template('edit.html', canvas_data=canvas_data)
 
 
 @app.route('/save', methods=['POST'])
