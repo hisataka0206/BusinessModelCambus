@@ -6,6 +6,14 @@
     <title>ビジネスモデルキャンパス</title>
     <link rel="stylesheet" href="cambus.css">
 </head>
+<form method="get" action="/">
+    <select name="db_name" onchange="this.form.submit()">
+        <option value="default.db">Default Database</option>
+        {% for db_file in db_files %}
+            <option value="{{ db_file }}">{{ db_file }}</option>
+        {% endfor %}
+    </select>
+</form>
 <body>
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}

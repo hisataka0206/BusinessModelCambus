@@ -1,6 +1,7 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, session
 import sqlite3
 from datetime import datetime
+import os
 
 app = Flask(__name__)
 app.secret_key = 'hisataka'
@@ -9,41 +10,50 @@ app.secret_key = 'hisataka'
 @app.route('/', methods=['GET'])
 @app.route('/<version_id>', methods=['GET'])
 def index(version_id=None):
-    conn = sqlite3.connect('business_model_canvas.db')
+    # カレントディレクトリ内の .db ファイルをリストアップ
+    db_files = [f for f in os.listdir('database') if f.endswith('.db')]
+    # 選択されたデータベース名を取得、もしくは前回のセッションから取得
+    db_name = request.args.get('db_name', session.get('db_name', 'default.db'))
+    # 選択されたデータベース名をセッションに保存
+    session['db_name'] = db_name
+    conn = sqlite3.connect(db_name)
     c = conn.cursor()
-
     # 特定のバージョンが指定されている場合、そのバージョンのデータを取得
-    if version_id:
-        c.execute('''
-            SELECT canvas_categories.category_name, canvas_elements.content
-            FROM canvas_elements
-            JOIN canvas_categories ON canvas_elements.category_id = canvas_categories.id
-            WHERE canvas_elements.version_id = ?
-        ''', (version_id,))
-    else:
-        c.execute('''
-            SELECT canvas_categories.category_name, canvas_elements.content
-            FROM canvas_elements
-            JOIN canvas_categories ON canvas_elements.category_id = canvas_categories.id
-            WHERE canvas_elements.version_id = (SELECT MAX(version_id) FROM canvas_elements)
-        ''')
+    if db_name != 'default.db':
+        if version_id:
+            c.execute('''
+                SELECT canvas_categories.category_name, canvas_elements.content
+                FROM canvas_elements
+                JOIN canvas_categories ON canvas_elements.category_id = canvas_categories.id
+                WHERE canvas_elements.version_id = ?
+            ''', (version_id,))
+        else:
+            c.execute('''
+                SELECT canvas_categories.category_name, canvas_elements.content
+                FROM canvas_elements
+                JOIN canvas_categories ON canvas_elements.category_id = canvas_categories.id
+                WHERE canvas_elements.version_id = (SELECT MAX(version_id) FROM canvas_elements)
+            ''')
 
-    data = c.fetchall()
+        data = c.fetchall()
 
-    c.execute('SELECT DISTINCT version_id FROM canvas_elements')
-    versions = [row[0] for row in c.fetchall()]
+        c.execute('SELECT DISTINCT version_id FROM canvas_elements')
+        versions = [row[0] for row in c.fetchall()]
 
-    # data を canvas_data という辞書に変換
-    canvas_data = {item[0]: item[1] for item in data}
-    conn.close()
-    # return render_template('index.html', data=data)
-    return render_template('cambus.html', canvas_data=canvas_data, versions=versions)
+        # data を canvas_data という辞書に変換
+        canvas_data = {item[0]: item[1] for item in data}
+        conn.close()
+        # return render_template('index.html', data=data)
+        return render_template('cambus.html', canvas_data=canvas_data, versions=versions)
+    # print(db_files)
+    return render_template('index.html', db_files=db_files)
 
 @app.route('/edit', methods=['GET', 'POST'])
 def edit():
+    db_name = session.get('db_name', 'default.db')
     if request.method == 'POST':
         # データベースにデータを保存する
-        conn = sqlite3.connect('business_model_canvas.db')
+        conn = sqlite3.connect(db_name)
         c = conn.cursor()
         for key in request.form.keys():
             c.execute('UPDATE canvas_elements SET content=? WHERE name=?', (request.form[key], key))
@@ -67,6 +77,7 @@ def edit():
 
 @app.route('/save', methods=['POST'])
 def save():
+    db_name = session.get('db_name', 'default.db')
     try:
         # フォームからデータを取得
         key_activity = request.form.get('key_activity')

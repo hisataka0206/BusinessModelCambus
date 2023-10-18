@@ -53,4 +53,4 @@ def init_db(db_name):
 if __name__ == '__main__':
     print("データベース名を入力してください")
     db_name = input()
-    init_db(db_name+".db")
+    init_db("database/"+db_name+".db")
