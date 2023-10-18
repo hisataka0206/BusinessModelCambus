@@ -39,3 +39,26 @@ th {
 .odd {
     background: #fefcf9;
 }
+
+.container {
+    display: flex;
+    justify-content: space-between; /* コンテンツの間にスペースを追加 */
+}
+
+.canvas {
+    flex: 1; /* ビジネスモデルキャンパスの領域を広げる */
+    margin-right: 20px; /* version_idのリストとの間にマージンを追加 */
+}
+
+.versions {
+    flex-basis: 200px; /* 過去のversion_idのリストの幅を200pxに設定（適宜調整） */
+}
+
+.versions ul {
+    list-style-type: disc;
+    padding-left: 20px;
+}
+
+.versions li {
+    margin-bottom: 5px;
+}

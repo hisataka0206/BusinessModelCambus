@@ -19,12 +19,14 @@ def index():
 
     data = c.fetchall()
 
+    c.execute('SELECT DISTINCT version_id FROM canvas_elements')
+    versions = [row[0] for row in c.fetchall()]
 
     # data を canvas_data という辞書に変換
     canvas_data = {item[0]: item[1] for item in data}
     conn.close()
     # return render_template('index.html', data=data)
-    return render_template('cambus.html', canvas_data=canvas_data)
+    return render_template('cambus.html', canvas_data=canvas_data, versions=versions)
 
 @app.route('/edit', methods=['GET', 'POST'])
 def edit():

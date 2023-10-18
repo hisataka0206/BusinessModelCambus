@@ -1,13 +1,14 @@
-<!--<!DOCTYPE html>-->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="{{ url_for('static', filename='cambus.css') }}" rel="stylesheet"/>
 </head>
-<body>
-    <h1>ビジネスモデルキャンパス</h1>
-    <table>
+<div class="container">
+    <!-- ビジネスモデルキャンパス部分 -->
+    <div class="canvas">
+        <h1>ビジネスモデルキャンパス</h1>
+        <table>
         <tbody>
             <tr>
                 <th colspan="2" rowspan="2">Key partners</th>
@@ -67,6 +68,15 @@
                 <td colspan="5" id="cost_structure_2"></td>
                 <td colspan="5" id="revenue_streams_2"></td>
             </tr>
+        </table>
         <a href="/edit">編集</a>
-    </tbody>
-</table>
+    </div>
+<div class="versions">
+    <h2>Past Versions</h2>
+    <ul>
+        {% for version in versions %}
+            <li>{{ version }}</li>
+        {% endfor %}
+    </ul>
+</div>
+</div>
