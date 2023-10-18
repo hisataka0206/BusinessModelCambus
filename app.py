@@ -6,16 +6,27 @@ app = Flask(__name__)
 app.secret_key = 'hisataka'
 
 
-@app.route('/')
-def index():
-    # データベースからデータを取得して表示する
+@app.route('/', methods=['GET'])
+@app.route('/<version_id>', methods=['GET'])
+def index(version_id=None):
     conn = sqlite3.connect('business_model_canvas.db')
     c = conn.cursor()
-    c.execute('''
-        SELECT canvas_categories.category_name, canvas_elements.content
-        FROM canvas_elements
-        JOIN canvas_categories ON canvas_elements.category_id = canvas_categories.id
-    ''')
+
+    # 特定のバージョンが指定されている場合、そのバージョンのデータを取得
+    if version_id:
+        c.execute('''
+            SELECT canvas_categories.category_name, canvas_elements.content
+            FROM canvas_elements
+            JOIN canvas_categories ON canvas_elements.category_id = canvas_categories.id
+            WHERE canvas_elements.version_id = ?
+        ''', (version_id,))
+    else:
+        c.execute('''
+            SELECT canvas_categories.category_name, canvas_elements.content
+            FROM canvas_elements
+            JOIN canvas_categories ON canvas_elements.category_id = canvas_categories.id
+            WHERE canvas_elements.version_id = (SELECT MAX(version_id) FROM canvas_elements)
+        ''')
 
     data = c.fetchall()
 
