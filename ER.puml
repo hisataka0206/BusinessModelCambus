@@ -1,0 +1,26 @@
+@startuml
+
+entity "canvas_versions" {
+  + version_id : int <<PK>>
+  ---
+  created_at : datetime
+}
+
+entity "canvas_categories" {
+  + category_id : int <<PK>>
+  ---
+  name : varchar [UNIQUE]
+}
+
+entity "canvas_elements" {
+  + element_id : int <<PK>>
+  ---
+  version_id : int <<FK>>
+  category_id : int <<FK>>
+  content : text
+}
+
+canvas_versions ||--o{ canvas_elements
+canvas_categories ||--o{ canvas_elements
+
+@enduml
