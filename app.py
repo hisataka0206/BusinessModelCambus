@@ -47,8 +47,8 @@ def index(version_id=None):
             ''')
 
         data = c.fetchall()
-        title = data[0][2]
-        comment = data[0][3]
+        title = data[0][2] if data else None
+        comment = data[0][3] if data else None
         c.execute('SELECT DISTINCT version_id FROM canvas_elements')
         versions = [row[0] for row in c.fetchall()]
         c.execute(
@@ -92,8 +92,8 @@ def edit():
         ''')
         data = c.fetchall()
         canvas_data = {item[0]: item[1] for item in data}
-        title = data[0][2]
-        comment = data[0][3]
+        title = data[0][2] if data else None
+        comment = data[0][3] if data else None
         conn.close()
         return render_template('edit.html', canvas_data=canvas_data,title=title, comment=comment)
 
