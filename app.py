@@ -212,11 +212,15 @@ def delete():
 
     c.execute('SELECT MAX(version_id) FROM canvas_elements')
     version_id = c.fetchone()[0]
-
     conn.close()
-
     return render_template('delete.html', versions=versions, version_id=version_id)
 
+
+@app.route('/call_input')
+def call_input():
+    # input.py を実行
+    import input
+    return redirect(url_for('index'))
 
 
 if __name__ == '__main__':

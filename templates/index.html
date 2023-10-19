@@ -6,6 +6,15 @@
     <title>ビジネスモデルキャンパス</title>
     <link rel="stylesheet" href="cambus.css">
 </head>
+<body>
+    <h1>ビジネスモデルキャンパス</h1>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
 <form method="get" action="/">
     <select name="db_name" onchange="this.form.submit()">
         <option value="default.db">Default Database</option>
@@ -14,21 +23,12 @@
         {% endfor %}
     </select>
 </form>
-<body>
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <div class="alert alert-{{ category }}">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
-    <h1>ビジネスモデルキャンパス</h1>
     <div id="canvas">
         <!-- ここに各要素を表示 -->
         {% for item in data %}
             <div id="{{ item[0] }}">{{ item[1] }}</div>
         {% endfor %}
     </div>
-    <a href="/edit">編集</a>
+    <a href="{{ url_for('call_input') }}" class="btn btn-primary">データベースを新規作成</a>
 </body>
 </html>
