@@ -16,10 +16,11 @@ def index(version_id=None):
     db_name = request.args.get('db_name', session.get('db_name', 'default.db'))
     # 選択されたデータベース名をセッションに保存
     session['db_name'] = db_name
+    db_name = "database/" + db_name
     conn = sqlite3.connect(db_name)
     c = conn.cursor()
     # 特定のバージョンが指定されている場合、そのバージョンのデータを取得
-    if db_name != 'default.db':
+    if db_name != 'database/default.db':
         if version_id:
             c.execute('''
                 SELECT canvas_categories.category_name, canvas_elements.content
@@ -45,13 +46,15 @@ def index(version_id=None):
         conn.close()
         # return render_template('index.html', data=data)
         return render_template('cambus.html', canvas_data=canvas_data, versions=versions)
-    # print(db_files)
     return render_template('index.html', db_files=db_files)
 
 @app.route('/edit', methods=['GET', 'POST'])
 def edit():
     db_name = session.get('db_name', 'default.db')
+    db_name = "database/" + db_name
+    print("edit1")
     if request.method == 'POST':
+        print("edit2")
         # データベースにデータを保存する
         conn = sqlite3.connect(db_name)
         c = conn.cursor()
@@ -61,8 +64,9 @@ def edit():
         conn.close()
         return redirect(url_for('index'))
     else:
+        print("edit3")
         # 編集画面を表示する
-        conn = sqlite3.connect('business_model_canvas.db')
+        conn = sqlite3.connect(db_name)
         c = conn.cursor()
         c.execute('''
             SELECT canvas_categories.category_name, canvas_elements.content
@@ -78,6 +82,7 @@ def edit():
 @app.route('/save', methods=['POST'])
 def save():
     db_name = session.get('db_name', 'default.db')
+    db_name ="database/" + db_name
     try:
         # フォームからデータを取得
         key_activity = request.form.get('key_activity')
@@ -89,7 +94,8 @@ def save():
         channel = request.form.get('channel')
         cost_structure = request.form.get('cost_structure')
         revenue_streams = request.form.get('revenue_streams')
-
+        title = request.form.get('title')
+        comment = request.form.get('comment')
         # 現在の日時を取得
         now = datetime.now()
 
@@ -97,27 +103,32 @@ def save():
         version_id = now.strftime('%Y%m%d%H%M%S')
 
         # データベースに接続
-        conn = sqlite3.connect('business_model_canvas.db')
+        conn = sqlite3.connect(db_name)
         c = conn.cursor()
+        print("save1")
 
         # データをデータベースに保存
         # この例では、canvas_versions テーブルから最新の version_id を取得して使用します。
         c.execute('SELECT MAX(version_id) FROM canvas_versions')
+        print("save2")
 
         # canvas_elements テーブルにデータを保存
         c.execute('''
             INSERT INTO canvas_elements (version_id, category_id, content) 
             VALUES (?, ?, ?)
         ''', (version_id, 1, key_activity)) # category_id 1 は key_activity に対応
+        print("save3")
 
         c.execute('''
             INSERT INTO canvas_elements (version_id, category_id, content) 
             VALUES (?, ?, ?)
         ''', (version_id, 2, customer_relationship)) # category_id 2 は customer_relationship に対応
+        print("save4")
         c.execute('''
             INSERT INTO canvas_elements (version_id, category_id, content) 
             VALUES (?, ?, ?)
         ''', (version_id, 3, key_partners)) # category_id 1 は key_activity に対応
+        print("save5")
 
         c.execute('''
             INSERT INTO canvas_elements (version_id, category_id, content) 
@@ -127,6 +138,7 @@ def save():
             INSERT INTO canvas_elements (version_id, category_id, content) 
             VALUES (?, ?, ?)
         ''', (version_id, 5, customer_segment)) # category_id 1 は key_activity に対応
+        print("save6")
 
         c.execute('''
             INSERT INTO canvas_elements (version_id, category_id, content) 
@@ -136,6 +148,7 @@ def save():
             INSERT INTO canvas_elements (version_id, category_id, content) 
             VALUES (?, ?, ?)
         ''', (version_id, 7, channel)) # category_id 1 は key_activity に対応
+        print("save7")
 
         c.execute('''
             INSERT INTO canvas_elements (version_id, category_id, content) 
@@ -145,7 +158,12 @@ def save():
             INSERT INTO canvas_elements (version_id, category_id, content) 
             VALUES (?, ?, ?)
         ''', (version_id, 9, revenue_streams)) # category_id 1 は key_activity に対応
-
+        print("save8")
+        c.execute('''
+            INSERT INTO canvas_versions (version_id, title, comment) 
+            VALUES (?, ?, ?)
+        ''', (version_id, title, comment))
+        print("save10")
         # 変更をコミット
         conn.commit()
 
