@@ -15,62 +15,44 @@
                 <p>{{ comment }}</p>
             </tr>
             <tr>
-                <th colspan="2" rowspan="2">Key partners</th>
-                <th colspan="2">Key activites</th>
-                <th colspan="2" rowspan="2">Value Proposition</th>
-                <th colspan="2">Customer Relationsships</th>
-                <th colspan="2" rowspan="2">Customer Segments</th>
+                <th colspan="2" rowspan="2" class="width20">KeyPartners</th>
+                <th colspan="2" class="width20">KeyActivites</th>
+                <th colspan="2" rowspan="2" class="width20">ValueProposition</th>
+                <th colspan="2" class="width20">CustomerRelationsships</th>
+                <th colspan="2" rowspan="2" class="width20">CustomerSegments</th>
             </tr>
             <tr>
-                <td colspan="2" id="key_activity_1"></td>
-                <td colspan="2" id="customer_relationship_1"></td>
+                <td colspan="2" id="key_activity_1" class="width20"></td>
+                <td colspan="2" id="customer_relationship_1" class="width20"></td>
             </tr>
             <tr>
-                <td colspan="2" id="key_partners_1">{{ canvas_data.key_partners | replace("\n", "<br>") | safe  }}</td>
-                <td colspan="2" id="key_activity_2">{{ canvas_data.key_activity | replace("\n", "<br>") | safe  }}</td>
-                <td colspan="2" id="value_proposition_1">{{ canvas_data.value_proposition | replace("\n", "<br>") | safe  }}</td>
-                <td colspan="2" id="customer_relationship_2">{{ canvas_data.customer_relationship | replace("\n", "<br>") | safe  }}</td>
-                <td colspan="2" id="customer_segment_1">{{ canvas_data.customer_segment | replace("\n", "<br>") | safe  }}</td>
+                <td colspan="2" id="key_partners_1" class="width20">{{ canvas_data.key_partners | replace("\n", "<br>") | safe  }}</td>
+                <td colspan="2" id="key_activity_2" class="width20">{{ canvas_data.key_activity | replace("\n", "<br>") | safe  }}</td>
+                <td colspan="2" id="value_proposition_1" class="width20">{{ canvas_data.value_proposition | replace("\n", "<br>") | safe  }}</td>
+                <td colspan="2" id="customer_relationship_2" class="width20">{{ canvas_data.customer_relationship | replace("\n", "<br>") | safe  }}</td>
+                <td colspan="2" id="customer_segment_1" class="width20">{{ canvas_data.customer_segment | replace("\n", "<br>") | safe  }}</td>
             </tr>
             <tr>
-                <td colspan="2" id="key_partners_2"></td>
-                <td colspan="2" id="key_activity_3"></td>
-                <td colspan="2" id="value_proposition_2"></td>
-                <td colspan="2" id="customer_relationship_3"></td>
-                <td colspan="2" id="customer_segment_2"></td>
+                <td colspan="2" id="key_partners_4" class="width20"></td>
+                <th colspan="2" class="width20">KeyResources</th>
+                <td colspan="2" id="value_proposition_4" class="width20"></td>
+                <th colspan="2" class="width20">Channels</th>
+                <td colspan="2" id="customer_segment_4" class="width20"></td>
             </tr>
             <tr>
-                <td colspan="2" id="key_partners_4"></td>
-                <th colspan="2">Key Resources</th>
-                <td colspan="2" id="value_proposition_4"></td>
-                <th colspan="2">Channels</th>
-                <td colspan="2" id="customer_segment_4"></td>
+                <td colspan="2" id="key_partners_5" class="width20"></td>
+                <td colspan="2" id="key_resources_1" class="width20">{{ canvas_data.key_resources | replace("\n", "<br>") | safe  }}</td>
+                <td colspan="2" id="value_proposition_5" class="width20"></td>
+                <td colspan="2" id="channel_1" class="width20">{{ canvas_data.channel | replace("\n", "<br>") | safe  }}</td>
+                <td colspan="2" id="customer_segment_5" class="width20"></td>
             </tr>
             <tr>
-                <td colspan="2" id="key_partners_5"></td>
-                <td colspan="2" id="key_resources_1">{{ canvas_data.key_resources | replace("\n", "<br>") | safe  }}</td>
-                <td colspan="2" id="value_proposition_5"></td>
-                <td colspan="2" id="channel_1">{{ canvas_data.channel | replace("\n", "<br>") | safe  }}</td>
-                <td colspan="2" id="customer_segment_5"></td>
+                <th colspan="5" class="width50">CostStructure</th>
+                <th colspan="5" class="width50">RevenueStreams</th>
             </tr>
             <tr>
-                <td colspan="2" id="key_partners_6"></td>
-                <td colspan="2" id="key_resources_2"></td>
-                <td colspan="2" id="value_proposition_6"></td>
-                <td colspan="2" id="channel_2"></td>
-                <td colspan="2" id="customer_segment_6"></td>
-            </tr>
-            <tr>
-                <th colspan="5">CostStructure</th>
-                <th colspan="5">RevenueStreams</th>
-            </tr>
-            <tr>
-                <td colspan="5" id="cost_structure_1">{{ canvas_data.cost_structure | replace("\n", "<br>") | safe  }}</td>
-                <td colspan="5" id="revenue_streams_1">{{ canvas_data.revenue_streams | replace("\n", "<br>") | safe  }}</td>
-            </tr>
-            <tr>
-                <td colspan="5" id="cost_structure_2"></td>
-                <td colspan="5" id="revenue_streams_2"></td>
+                <td colspan="5" id="cost_structure_1" class="width50">{{ canvas_data.cost_structure | replace("\n", "<br>") | safe  }}</td>
+                <td colspan="5" id="revenue_streams_1" class="width50">{{ canvas_data.revenue_streams | replace("\n", "<br>") | safe  }}</td>
             </tr>
         </table>
         <a href="/edit">編集</a>

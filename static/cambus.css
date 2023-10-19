@@ -21,23 +21,17 @@ th {
     border: 1px solid black !important;
 }
 
-td,
-th {
-    padding: 3px;
-    width: 30px;
-    height: 25px;
+th.width20 {
+    width: 20%;
 }
 
+th.width50 {
+    width: 50%;
+}
+
+/* headerの色 */
 th {
     background: #f0e6cc;
-}
-
-.even {
-    background: #fbf8f0;
-}
-
-.odd {
-    background: #fefcf9;
 }
 
 .container {
@@ -50,6 +44,7 @@ th {
     margin-right: 20px; /* version_idのリストとの間にマージンを追加 */
 }
 
+/* PastVersionのスタイル */
 .versions {
     flex-basis: 200px; /* 過去のversion_idのリストの幅を200pxに設定（適宜調整） */
 }
