@@ -23,21 +23,32 @@ def index(version_id=None):
     if db_name != 'database/default.db':
         if version_id:
             c.execute('''
-                SELECT canvas_categories.category_name, canvas_elements.content
+                SELECT 
+                    canvas_categories.category_name, 
+                    canvas_elements.content,
+                    canvas_versions.title,
+                    canvas_versions.comment
                 FROM canvas_elements
                 JOIN canvas_categories ON canvas_elements.category_id = canvas_categories.id
+                LEFT JOIN canvas_versions ON canvas_elements.version_id = canvas_versions.version_id
                 WHERE canvas_elements.version_id = ?
             ''', (version_id,))
         else:
             c.execute('''
-                SELECT canvas_categories.category_name, canvas_elements.content
+                SELECT 
+                    canvas_categories.category_name, 
+                    canvas_elements.content,
+                    canvas_versions.title,
+                    canvas_versions.comment
                 FROM canvas_elements
                 JOIN canvas_categories ON canvas_elements.category_id = canvas_categories.id
+                LEFT JOIN canvas_versions ON canvas_elements.version_id = canvas_versions.version_id
                 WHERE canvas_elements.version_id = (SELECT MAX(version_id) FROM canvas_elements)
             ''')
 
         data = c.fetchall()
-
+        title = data[0][2]
+        comment = data[0][3]
         c.execute('SELECT DISTINCT version_id FROM canvas_elements')
         versions = [row[0] for row in c.fetchall()]
 
@@ -45,16 +56,14 @@ def index(version_id=None):
         canvas_data = {item[0]: item[1] for item in data}
         conn.close()
         # return render_template('index.html', data=data)
-        return render_template('cambus.html', canvas_data=canvas_data, versions=versions)
+        return render_template('cambus.html', canvas_data=canvas_data, versions=versions, title=title, comment=comment)
     return render_template('index.html', db_files=db_files)
 
 @app.route('/edit', methods=['GET', 'POST'])
 def edit():
     db_name = session.get('db_name', 'default.db')
     db_name = "database/" + db_name
-    print("edit1")
     if request.method == 'POST':
-        print("edit2")
         # データベースにデータを保存する
         conn = sqlite3.connect(db_name)
         c = conn.cursor()
@@ -64,19 +73,26 @@ def edit():
         conn.close()
         return redirect(url_for('index'))
     else:
-        print("edit3")
         # 編集画面を表示する
         conn = sqlite3.connect(db_name)
         c = conn.cursor()
         c.execute('''
-            SELECT canvas_categories.category_name, canvas_elements.content
+            SELECT 
+                canvas_categories.category_name, 
+                canvas_elements.content,
+                canvas_versions.title,
+                canvas_versions.comment
             FROM canvas_elements
             JOIN canvas_categories ON canvas_elements.category_id = canvas_categories.id
+            LEFT JOIN canvas_versions ON canvas_elements.version_id = canvas_versions.version_id
+            WHERE canvas_elements.version_id = (SELECT MAX(version_id) FROM canvas_elements)
         ''')
         data = c.fetchall()
         canvas_data = {item[0]: item[1] for item in data}
+        title = data[0][2]
+        comment = data[0][3]
         conn.close()
-        return render_template('edit.html', canvas_data=canvas_data)
+        return render_template('edit.html', canvas_data=canvas_data,title=title, comment=comment)
 
 
 @app.route('/save', methods=['POST'])
@@ -105,30 +121,25 @@ def save():
         # データベースに接続
         conn = sqlite3.connect(db_name)
         c = conn.cursor()
-        print("save1")
 
         # データをデータベースに保存
         # この例では、canvas_versions テーブルから最新の version_id を取得して使用します。
         c.execute('SELECT MAX(version_id) FROM canvas_versions')
-        print("save2")
 
         # canvas_elements テーブルにデータを保存
         c.execute('''
             INSERT INTO canvas_elements (version_id, category_id, content) 
             VALUES (?, ?, ?)
         ''', (version_id, 1, key_activity)) # category_id 1 は key_activity に対応
-        print("save3")
 
         c.execute('''
             INSERT INTO canvas_elements (version_id, category_id, content) 
             VALUES (?, ?, ?)
         ''', (version_id, 2, customer_relationship)) # category_id 2 は customer_relationship に対応
-        print("save4")
         c.execute('''
             INSERT INTO canvas_elements (version_id, category_id, content) 
             VALUES (?, ?, ?)
         ''', (version_id, 3, key_partners)) # category_id 1 は key_activity に対応
-        print("save5")
 
         c.execute('''
             INSERT INTO canvas_elements (version_id, category_id, content) 
@@ -138,7 +149,6 @@ def save():
             INSERT INTO canvas_elements (version_id, category_id, content) 
             VALUES (?, ?, ?)
         ''', (version_id, 5, customer_segment)) # category_id 1 は key_activity に対応
-        print("save6")
 
         c.execute('''
             INSERT INTO canvas_elements (version_id, category_id, content) 
@@ -148,7 +158,6 @@ def save():
             INSERT INTO canvas_elements (version_id, category_id, content) 
             VALUES (?, ?, ?)
         ''', (version_id, 7, channel)) # category_id 1 は key_activity に対応
-        print("save7")
 
         c.execute('''
             INSERT INTO canvas_elements (version_id, category_id, content) 
@@ -158,12 +167,10 @@ def save():
             INSERT INTO canvas_elements (version_id, category_id, content) 
             VALUES (?, ?, ?)
         ''', (version_id, 9, revenue_streams)) # category_id 1 は key_activity に対応
-        print("save8")
         c.execute('''
             INSERT INTO canvas_versions (version_id, title, comment) 
             VALUES (?, ?, ?)
         ''', (version_id, title, comment))
-        print("save10")
         # 変更をコミット
         conn.commit()
 
