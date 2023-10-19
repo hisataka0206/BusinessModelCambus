@@ -51,6 +51,8 @@ def index(version_id=None):
         comment = data[0][3] if data else None
         c.execute('SELECT DISTINCT version_id FROM canvas_elements')
         versions = [row[0] for row in c.fetchall()]
+        if version_id == None:
+            version_id = max(versions)
         c.execute(
             'SELECT DISTINCT canvas_elements.version_id, title FROM canvas_elements JOIN canvas_versions ON canvas_elements.version_id = canvas_versions.version_id')
         versions_with_title = c.fetchall()
@@ -59,11 +61,11 @@ def index(version_id=None):
         canvas_data = {item[0]: item[1] for item in data}
         conn.close()
         # return render_template('index.html', data=data)
-        return render_template('cambus.html', canvas_data=canvas_data, versions=versions_with_title, title=title, comment=comment)
+        return render_template('cambus.html', canvas_data=canvas_data, versions=versions_with_title, title=title, comment=comment, version_id=version_id)
     return render_template('index.html', db_files=db_files)
 
-@app.route('/edit', methods=['GET', 'POST'])
-def edit():
+@app.route('/edit/<version_id>', methods=['GET', 'POST'])
+def edit(version_id=None):
     db_name = session.get('db_name', 'default.db')
     db_name = "database/" + db_name
     if request.method == 'POST':
@@ -88,14 +90,14 @@ def edit():
             FROM canvas_elements
             JOIN canvas_categories ON canvas_elements.category_id = canvas_categories.id
             LEFT JOIN canvas_versions ON canvas_elements.version_id = canvas_versions.version_id
-            WHERE canvas_elements.version_id = (SELECT MAX(version_id) FROM canvas_elements)
-        ''')
+            WHERE canvas_elements.version_id = ?
+        ''', (version_id,))
         data = c.fetchall()
         canvas_data = {item[0]: item[1] for item in data}
         title = data[0][2] if data else None
         comment = data[0][3] if data else None
         conn.close()
-        return render_template('edit.html', canvas_data=canvas_data,title=title, comment=comment)
+        return render_template('edit.html', canvas_data=canvas_data,title=title, comment=comment, version_id=version_id)
 
 
 @app.route('/save', methods=['POST'])
@@ -188,6 +190,32 @@ def save():
         flash('An error occurred while saving data.', 'danger')
 
     return redirect(url_for('index'))
+
+
+@app.route('/delete', methods=['GET', 'POST'])
+def delete():
+    db_name = session.get('db_name', 'default.db')
+    db_name = "database/" + db_name
+    conn = sqlite3.connect(db_name)
+    c = conn.cursor()
+
+    if request.method == 'POST':
+        versions_to_delete = request.form.getlist('delete_versions')
+        for version in versions_to_delete:
+            c.execute('DELETE FROM canvas_elements WHERE version_id=?', (version,))
+            c.execute('DELETE FROM canvas_versions WHERE version_id=?', (version,))
+        conn.commit()
+        return redirect(url_for('index'))
+
+    c.execute('SELECT DISTINCT canvas_elements.version_id, title FROM canvas_elements JOIN canvas_versions ON canvas_elements.version_id = canvas_versions.version_id')
+    versions = c.fetchall()
+
+    c.execute('SELECT MAX(version_id) FROM canvas_elements')
+    version_id = c.fetchone()[0]
+
+    conn.close()
+
+    return render_template('delete.html', versions=versions, version_id=version_id)
 
 
 

@@ -1,0 +1,18 @@
+<form action="/delete" method="post">
+    <table>
+        <tr>
+            <th>Select</th>
+            <th>Version</th>
+            <th>Title</th>
+        </tr>
+        {% for version in versions %}
+        <tr>
+            <td><input type="checkbox" name="delete_versions" value="{{ version[0] }}"></td>
+            <td>{{ version[0] }}</td>
+            <td>{{ version[1] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <input type="submit" value="Delete">
+</form>
+<a href="{{ url_for('index', version_id=version_id) }}">Back</a>
