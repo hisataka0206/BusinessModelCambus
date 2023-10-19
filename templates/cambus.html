@@ -78,8 +78,8 @@
 <div class="versions">
     <h2>Past Versions</h2>
     <ul>
-        {% for version in versions %}
-            <li><a href="{{ url_for('index', version_id=version) }}">{{ version }}</a></li>
+        {% for version, title in versions %}
+            <li><a href="{{ url_for('index', version_id=version) }}">{{ version }}</a> - {{ title }}</li>
         {% endfor %}
     </ul>
 </div>

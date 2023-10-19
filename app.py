@@ -51,12 +51,15 @@ def index(version_id=None):
         comment = data[0][3]
         c.execute('SELECT DISTINCT version_id FROM canvas_elements')
         versions = [row[0] for row in c.fetchall()]
+        c.execute(
+            'SELECT DISTINCT canvas_elements.version_id, title FROM canvas_elements JOIN canvas_versions ON canvas_elements.version_id = canvas_versions.version_id')
+        versions_with_title = c.fetchall()
 
         # data を canvas_data という辞書に変換
         canvas_data = {item[0]: item[1] for item in data}
         conn.close()
         # return render_template('index.html', data=data)
-        return render_template('cambus.html', canvas_data=canvas_data, versions=versions, title=title, comment=comment)
+        return render_template('cambus.html', canvas_data=canvas_data, versions=versions_with_title, title=title, comment=comment)
     return render_template('index.html', db_files=db_files)
 
 @app.route('/edit', methods=['GET', 'POST'])
