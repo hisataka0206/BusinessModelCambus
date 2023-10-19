@@ -1,0 +1,16 @@
+table {
+    width: 100%;
+}
+
+td {
+    width: 20%;
+    vertical-align: top;
+}
+
+textarea {
+    width: 95%;
+    height: 5em;
+}
+.large-textarea {
+    height: 140px;
+}

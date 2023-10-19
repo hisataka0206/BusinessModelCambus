@@ -2,42 +2,56 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Business Model Canvas</title>
+    <link href="{{ url_for('static', filename='edit.css') }}" rel="stylesheet"/>
 </head>
 <body>
     <h1>Edit Business Model Canvas</h1>
+    <form action="/save" method="post">
+        <table>
+            <tbody>
+                <tr>
+                    <th colspan="2">Key Partners</th>
+                    <th colspan="2">Key Activities</th>
+                    <th colspan="2">Value Proposition</th>
+                    <th colspan="2">Customer Relationships</th>
+                    <th colspan="2">Customer Segments</th>
+                </tr>
+                <tr>
+                    <td colspan="2", rowspan="4"><textarea name="key_partners", class="large-textarea">{{ canvas_data['key_partners'] }}</textarea></td>
+                    <td colspan="2"><textarea name="key_activity">{{ canvas_data['key_activity'] }}</textarea></td>
+                    <td colspan="2", rowspan="4"><textarea name="value_proposition", class="large-textarea">{{ canvas_data['value_proposition'] }}</textarea></td>
+                    <td colspan="2"><textarea name="customer_relationship">{{ canvas_data['customer_relationship'] }}</textarea></td>
+                    <td colspan="2", rowspan="4"><textarea name="customer_segment", class="large-textarea">{{ canvas_data['customer_segment'] }}</textarea></td>
+                </tr>
+                <tr>
+                    <th>Key Resources</th>
+                    <th></th>
+                    <th></th>
+                    <th>Channels</th>
+                </tr>
+                <tr>
+                    <td><textarea name="key_resources">{{ canvas_data['key_resources'] }}</textarea></td>
+                    <th></th>
+                    <th></th>
+                    <td><textarea name="channel">{{ canvas_data['channel'] }}</textarea></td>
+                </tr>
+                    <th colspan="1">Cost Structure</th>
+                    <th></th>
+                    <th></th>
+                    <th colspan="1">Revenue Streams</th>
+                <tr></tr>
+                <tr>
+                    <td colspan="5"><textarea name="cost_structure">{{ canvas_data['cost_structure'] }}</textarea></td>
+                    <th></th>
+                    <td colspan="5"><textarea name="revenue_streams">{{ canvas_data['revenue_streams'] }}</textarea></td>
 
-    <form action="/save" method="POST">
-        <label for="key_activity">Key Activity:</label><br>
-        <textarea id="key_activity" name="key_activity" rows="4" cols="50">{{ canvas_data.key_activity | replace("\n", "<br>") | safe  }}</textarea><br><br>
-
-        <label for="customer_relationship">Customer Relationship:</label><br>
-        <textarea id="customer_relationship" name="customer_relationship" rows="4" cols="50">{{ canvas_data.customer_relationship | replace("\n", "<br>") | safe  }}</textarea><br><br>
-
-        <label for="key_partners">Key Partners:</label><br>
-        <textarea id="key_partners" name="key_partners" rows="4" cols="50">{{ canvas_data.key_partners | replace("\n", "<br>") | safe  }}</textarea><br><br>
-
-        <label for="value_proposition">Value Proposition:</label><br>
-        <textarea id="value_proposition" name="value_proposition" rows="4" cols="50">{{ canvas_data.value_proposition | replace("\n", "<br>") | safe  }}</textarea><br><br>
-
-        <label for="customer_segment">Customer Segment:</label><br>
-        <textarea id="customer_segment" name="customer_segment" rows="4" cols="50">{{ canvas_data.customer_segment | replace("\n", "<br>") | safe  }}</textarea><br><br>
-
-        <label for="key_resources">Key Resources:</label><br>
-        <textarea id="key_resources" name="key_resources" rows="4" cols="50">{{ canvas_data.key_resources | replace("\n", "<br>") | safe  }}</textarea><br><br>
-
-        <label for="channel">Channel:</label><br>
-        <textarea id="channel" name="channel" rows="4" cols="50">{{ canvas_data.channel | replace("\n", "<br>") | safe  }}</textarea><br><br>
-
-        <label for="cost_structure">Cost Structure:</label><br>
-        <textarea id="cost_structure" name="cost_structure" rows="4" cols="50">{{ canvas_data.cost_structure | replace("\n", "<br>") | safe  }}</textarea><br><br>
-
-        <label for="revenue_streams">Revenue Streams:</label><br>
-        <textarea id="revenue_streams" name="revenue_streams" rows="4" cols="50">{{ canvas_data.revenue_streams | replace("\n", "<br>") | safe  }}</textarea><br><br>
-
+                </tr>
+            </tbody>
+        </table>
         <input type="submit" value="Save">
     </form>
+    <a href="/">Back to canvas</a>
 </body>
 </html>
