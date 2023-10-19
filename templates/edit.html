@@ -12,6 +12,12 @@
         <table>
             <tbody>
                 <tr>
+                    <label for="title">Title:</label>
+                    <input type="text" name="title" id="title" value="{{ canvas_data['title'] }}">
+                    <label for="comment">Comment:</label>
+                    <textarea name="comment" id="comment">{{ canvas_data['comment'] }}</textarea>
+                </tr>
+                <tr>
                     <th colspan="2">Key Partners</th>
                     <th colspan="2">Key Activities</th>
                     <th colspan="2">Value Proposition</th>

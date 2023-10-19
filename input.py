@@ -8,7 +8,8 @@ def init_db(db_name):
     c.execute('''
         CREATE TABLE IF NOT EXISTS canvas_versions (
             version_id INTEGER PRIMARY KEY,
-            created_at DATETIME NOT NULL
+            title TEXT,
+            comment TEXT
         )
     ''')
 
