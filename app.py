@@ -51,8 +51,9 @@ def index(version_id=None):
         comment = data[0][3] if data else None
         c.execute('SELECT DISTINCT version_id FROM canvas_elements')
         versions = [row[0] for row in c.fetchall()]
-        if version_id == None:
-            version_id = max(versions)
+        version_id = max(versions) if versions else None
+        if not version_id:
+            version_id = create_empty_data(c)  # この関数で新しい空のバージョンを作成
         c.execute(
             'SELECT DISTINCT canvas_elements.version_id, title FROM canvas_elements JOIN canvas_versions ON canvas_elements.version_id = canvas_versions.version_id')
         versions_with_title = c.fetchall()
@@ -216,11 +217,94 @@ def delete():
     return render_template('delete.html', versions=versions, version_id=version_id)
 
 
-@app.route('/call_input')
-def call_input():
-    # input.py を実行
-    import input
-    return redirect(url_for('index'))
+def create_empty_data(c):
+    # 新しいデータベースに初期データを挿入
+    version_id = datetime.now().strftime('%Y%m%d%H%M%S')
+    categories = [
+        'key_activity', 'customer_relationship', 'key_partners',
+        'value_proposition', 'customer_segment', 'key_resources',
+        'channel', 'cost_structure', 'revenue_streams'
+    ]
+    for idx, category in enumerate(categories, 1):
+        c.execute('''
+            INSERT INTO canvas_elements (version_id, category_id, content) 
+            VALUES (?, ?, ?)
+        ''', (version_id, idx, ""))
+
+    c.execute('''
+        INSERT INTO canvas_versions (version_id, title, comment) 
+        VALUES (?, ?, ?)
+    ''', (version_id, "", ""))
+    return version_id
+
+
+@app.route('/create_database', methods=['GET', 'POST'])
+def create_database():
+    if request.method == 'POST':
+        db_name = request.form.get('db_name')
+        print("db1")
+        if db_name:
+            print("db2")
+            # .db 拡張子がなければ追加
+            if not db_name.endswith('.db'):
+                db_name += '.db'
+            db_path = os.path.join('database', db_name)
+            print("db3", db_path)
+            if not os.path.exists(db_path):
+                print("db4", db_path)
+                conn = sqlite3.connect(db_path)
+                c = conn.cursor()
+
+                # canvas_versionsのテーブルを作成
+                c.execute('''
+                    CREATE TABLE IF NOT EXISTS canvas_versions (
+                        version_id INTEGER PRIMARY KEY,
+                        title TEXT,
+                        comment TEXT
+                    )
+                ''')
+
+                # canvas_categoriesのテーブルを作成
+                c.execute('''
+                    CREATE TABLE IF NOT EXISTS canvas_categories (
+                        id INTEGER PRIMARY KEY,
+                        category_name TEXT NOT NULL UNIQUE
+                    )
+                ''')
+
+                # canvas_elementsのテーブルを作成
+                c.execute('''
+                    CREATE TABLE IF NOT EXISTS canvas_elements (
+                        id INTEGER PRIMARY KEY,
+                        version_id TEXT NOT NULL,
+                        category_id INTEGER,
+                        content TEXT NOT NULL,
+                        FOREIGN KEY(category_id) REFERENCES canvas_categories(id)
+                    )
+                ''')
+
+                # canvas_categoriesにデフォルトのカテゴリを追加
+                default_categories = [
+                    "key_activity", "customer_relationship", "key_partners",
+                    "value_proposition", "customer_segment", "key_resources",
+                    "channel", "cost_structure", "revenue_streams"
+                ]
+
+                for category in default_categories:
+                    try:
+                        c.execute("INSERT INTO canvas_categories (category_name) VALUES (?)", (category,))
+                    except sqlite3.IntegrityError:
+                        # カテゴリがすでに存在する場合は追加しない
+                        pass
+                create_empty_data(c)
+
+                conn.commit()
+                conn.close()
+                flash('Database created successfully!', 'success')
+            else:
+                flash('Database already exists.', 'danger')
+            return redirect(url_for('index'))
+    return render_template('create_db.html')
 
 
 if __name__ == '__main__':
