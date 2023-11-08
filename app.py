@@ -10,6 +10,7 @@ app.secret_key = 'hisataka'
 @app.route('/', methods=['GET'])
 @app.route('/<version_id>', methods=['GET'])
 def index(version_id=None):
+    before_version_id = version_id
     # カレントディレクトリ内の .db ファイルをリストアップ
     db_files = [f for f in os.listdir('database') if f.endswith('.db')]
     # 選択されたデータベース名を取得、もしくは前回のセッションから取得
@@ -62,7 +63,9 @@ def index(version_id=None):
         canvas_data = {item[0]: item[1] for item in data}
         conn.close()
         # return render_template('index.html', data=data)
-        return render_template('cambus.html', canvas_data=canvas_data, versions=versions_with_title, title=title, comment=comment, version_id=version_id)
+        if before_version_id is None:
+            before_version_id = version_id
+        return render_template('cambus.html', canvas_data=canvas_data, versions=versions_with_title, title=title, comment=comment, version_id=version_id, before_version_id=before_version_id)
     return render_template('index.html', db_files=db_files)
 
 @app.route('/edit/<version_id>', methods=['GET', 'POST'])

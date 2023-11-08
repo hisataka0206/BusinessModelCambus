@@ -58,7 +58,7 @@
                 <td colspan="5" id="revenue_streams_1" class="width50">{{ canvas_data.revenue_streams | replace("\n", "<br>") | safe  }}</td>
             </tr>
         </table>
-        <a href="{{ url_for('edit', version_id=version_id) }}">編集</a>
+        <a href="{{ url_for('edit', version_id=before_version_id) }}">編集</a>
     </div>
 <div class="versions">
     <h2>Past Versions</h2>
